@@ -8,7 +8,7 @@ class GameManager():
         self.turnList = []
         self.die = random
 
-    def setMode(modeValue):
+    def setMode(self, modeValue):
         self.mode = modeValue
 
     def rollDice(self):
