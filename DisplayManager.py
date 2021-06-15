@@ -1,5 +1,5 @@
 from Player import Player, Computer
-
+import random
 class DisplayManager():
     def __init__(self):
         pass
@@ -14,3 +14,9 @@ class DisplayManager():
         print(Player.getName(), "\'s Turn")
         print("1. Roll")
         print("2. Hold")
+
+    def printPlayerSelection(self):
+        print("How many players in total are there? (Including Yourself)")
+        print("Maximum amount is 4 Players.")
+
+    

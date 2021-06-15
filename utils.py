@@ -1,4 +1,6 @@
 from enum import Enum 
+from Player import Player, Computer
+
 class AIBehaviors(Enum):
     NEUTRAL = 0
     COCKY = 1
@@ -6,9 +8,17 @@ class AIBehaviors(Enum):
     OPTIMAL = 3
     AVERAGE = 4
 
+class gameState(Enum):
+    MAIN_MENU = 0
+    PLAYER_SELECTION_MENU = 1
+    WHO_GOES_FIRST = 2
+    TURN_MENU = 3
+    MATCH_END = 4
+    GAMEOVER = 5
+
 class playerQueue:
     def __init__(self, player_list):
-        self._players = player_list
+        self._players = list(player_list)
         self._counter = 0
         self._should_stop = False 
 
@@ -24,3 +34,27 @@ class playerQueue:
         player = self._players[self._counter]
         self._counter = self._counter + 1
         return player
+
+    def getIndex(self, index):
+        if self.isEmpty():
+            return None
+        return self._players.index(index)
+
+    def isEmpty(self):
+        if len(self._players) == 0:
+            return True
+        else:
+            return False
+
+    def sort(self):
+        self._players.sort(key=lambda pq: pq.getTurnNumber())
+    
+    def addPlayer(self, playerName):
+        playerToAdd = Player(None, 0, 0, 0, False)
+        playerToAdd.setName(playerName)
+        self._players.append(playerToAdd)
+
+    def addComputer(self):
+        computerToAdd = Computer(None, 0,0,0, True, AIBehaviors.NEUTRAL)
+        self._players.append(computerToAdd)
+
