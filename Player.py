@@ -14,6 +14,9 @@ class Player():
         print("Times rolled this turn: ", self.timesRolled)
         print("Is a Computer? : ", self.isComputer)
 
+    def getName(self):
+        return self.name
+
     def getCurrentScore(self):
         return self.currentScore
     
@@ -22,10 +25,10 @@ class Player():
 
     def getTimesRolled(self):
         return self.timesRolled
-
+    
+    #def updatePlayerTurn(self, scoreToAdd):
+    #    pass
 class Computer(Player):
     def __init__(self, name, currentScore, totalScore, timesRolled, isComputer, Behavior):
         super().__init__(name, currentScore, totalScore, timesRolled, isComputer)
         self.Behavior = Behavior
-
-    

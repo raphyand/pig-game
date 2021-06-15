@@ -11,18 +11,22 @@
 
 from utils import AIBehaviors
 from GameManager import GameManager
+from DisplayManager import DisplayManager
 from Player import Player, Computer
 
 def main():
-    print("This is a test.  It should be printed out.")
+
+    game_is_not_over = False
+    
+
     myGameManager = GameManager(0,0)
-    myGameManager.rollDice()
+    #myGameManager.rollDice()
     player1 = Player("Raphy", 0,0,0, False)
     player2 = Computer("Henry the Robot", 0,0,0, True, AIBehaviors.NEUTRAL)
-    player1.printPlayerSheet()
-    print("")
+    #myGameManager.mainMenu()
+    player3 = Computer("Alexa the Despacito", 0, 0, 0, True, AIBehaviors.NEUTRAL)
+    myGameManager.turnMenu(player3)
 
-    player2.printPlayerSheet()
 if __name__ == "__main__":
     # execute only if run as a script
     main()
