@@ -1,22 +1,15 @@
 #!/usr/bin/env python3
 
-
-#Should have classes: 
-#   Dice
-#   Game Manager
-#   Player
-#       Computer
-#   Score Board
-#   Display Manager
-
+"""The main program for Pig."""
 
 from GameManager import GameManager
 
+#Main Function
 def main():
-    myGameManager = GameManager(0,0)
-    myGameManager.coreGamePlayLoop()
+    """Main Method"""
+    my_game_manager = GameManager(0,0)
+    my_game_manager.coreGamePlayLoop()
 
 if __name__ == "__main__":
     # execute only if run as a script
     main()
-

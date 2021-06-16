@@ -5,6 +5,8 @@ from utils import gameState
 from DisplayManager import DisplayManager
 from playerQueue import playerQueue
 
+"""Game Manager: Handles all things relating to Pig's internal execution."""
+
 # Holds the rules and back-end game setup
 class GameManager():
     def __init__(self, m, hS):
@@ -96,49 +98,55 @@ class GameManager():
 
     def playerSelectionMenu(self):
         validInput = True
-        if self.userInput == '1':
-            userName = input("Please enter your name.\n")
-            self.playerTurnList.addPlayer(userName)
-            while validInput is True:  
-                self.myDisplayManager.printPlayerSelection()
-                self.receiveInput()
-                #When user input is outside of range.
-                if int(self.userInput) <= 1 or int(self.userInput) > 4:
-                    validInput = False
-
-                #When user Input is valid.
-                if int(self.userInput) > 1 and int(self.userInput) <= 4:
-                    for iterator in range(int(self.userInput) - 1):
-                        self.playerTurnList.addComputer()
-                    self.setCurrentGameState(gameState.WHO_GOES_FIRST)
-                    break
-
-                #When user input is completely invalid
-                else:    
-                    validInput = False
-
-        elif self.userInput == '2':
-            while validInput is True:
-                self.myDisplayManager.printPlayerSelection()
-                self.receiveInput()
-                amountOfPlayers = int(self.userInput)
-                if int(self.userInput) <= 1 or int(self.userInput) > 4:
-                    validInput = False
+        validInput2 = True
+        while validInput2 is True:
+            if self.userInput == '1':
+                userName = input("Please enter your name.\n")
+                self.playerTurnList.addPlayer(userName)
+                while validInput is True:  
+                    self.myDisplayManager.printPlayerSelection()
+                    self.receiveInput()
+                    #When user Input is valid.
+                    if str.isalpha(self.userInput):
+                        validInput2 = False
+                    elif int(self.userInput) > 1 and int(self.userInput) <= 4:
+                        for iterator in range(int(self.userInput) - 1):
+                            self.playerTurnList.addComputer()
+                        self.setCurrentGameState(gameState.WHO_GOES_FIRST)
+                        break
+                    #When user input is outside of range.
+                    elif int(self.userInput) <= 1 or int(self.userInput) > 4:
+                        validInput = False
+                    #When user input is completely invalid
+                    else:    
+                        validInput = False
+            elif self.userInput == '2':
+                while validInput is True:
+                    self.myDisplayManager.printPlayerSelection()
+                    self.receiveInput()
+                    amountOfPlayers = int(self.userInput)
+                    if int(self.userInput) <= 1 or int(self.userInput) > 4:
+                        validInput = False
+                    else:
+                        validInput = False                
+                    print("How many computers?")
+                    self.receiveInput()
+                    if int(self.userInput) - amountOfPlayers < 0:
+                        print("Invalid amount of players.")
+                        validInput = False
+                    elif int(self.userInput) - amountOfPlayers > 0:
+                        humanPlayers = int(self.userInput) - amountOfPlayers
+                        iterator = 0
+                        self.setCurrentGameState(gameState.WHO_GOES_FIRST)
+                        break
+                    else:
+                        validInput = False
                 else:
-                    validInput = False                
-                print("How many computers?")
-                self.receiveInput()
-                if int(self.userInput) - amountOfPlayers < 0:
-                    print("Invalid amount of players.")
-                    validInput = False
-                elif int(self.userInput) - amountOfPlayers > 0:
-                    humanPlayers = int(self.userInput) - amountOfPlayers
-                    iterator = 0
-                    self.setCurrentGameState(gameState.WHO_GOES_FIRST)
-                    break
-                else:
-                    validInput = False
-            
+                    validInput2 = False
+            else:
+                validInput2  = False
+
+
     def whoGoesFirst_Menu(self):
         for iterator in self.playerTurnList:
             if iterator.isAComputer() is False:
@@ -170,10 +178,12 @@ class GameManager():
         for players in self.playerTurnList:
             self._currentPlayer = players
             endTurnFlag = False
+            #validInput = True
             while endTurnFlag is False:
                 if players.isAComputer() is False:
                     self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore, players.getTimesRolled())
                     self.receiveInput()
+                    
                     if self.userInput == '1':
                         result = self.rollDice(True)
                         players.incrementTimesRolled()                        
@@ -195,6 +205,8 @@ class GameManager():
                             gameWon = True
                             break
                         endTurnFlag = True
+                    
+                    
 
                 elif players.isAComputer() is True:
                     self.userInput = players.actOnBehavior()
