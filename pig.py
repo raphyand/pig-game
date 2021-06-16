@@ -2,13 +2,13 @@
 
 """The main program for Pig."""
 
-from GameManager import GameManager
+from game_manager import GameManager
 
 #Main Function
 def main():
     """Main Method"""
-    my_game_manager = GameManager(0,0)
-    my_game_manager.coreGamePlayLoop()
+    my_game_manager = GameManager()
+    my_game_manager.core_game_play_loop()
 
 if __name__ == "__main__":
     # execute only if run as a script
