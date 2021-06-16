@@ -1,4 +1,4 @@
-import random
+import random, pdb
 from Player import Player, Computer
 from utils import gameState, playerQueue
 from DisplayManager import DisplayManager
@@ -68,19 +68,24 @@ class GameManager():
 
     def playerSelectionMenu(self):
         validInput = True
- 
         if self.userInput == '1':
             userName = input("Please enter your name.")
             self.playerTurnList.addPlayer(userName)
             while validInput is True:  
                 self.myDisplayManager.printPlayerSelection()
                 self.receiveInput()
+                #When user input is outside of range.
                 if int(self.userInput) <= 1 or int(self.userInput) > 4:
                     validInput = False
-                if int(self.userInput) >= 1 and int(self.userInput) <= 4:
 
+                #When user Input is valid.
+                if int(self.userInput) > 1 and int(self.userInput) <= 4:
+                    for iterator in range(int(self.userInput) - 1):
+                        self.playerTurnList.addComputer()
                     self.setCurrentGameState(gameState.WHO_GOES_FIRST)
                     break
+
+                #When user input is completely invalid
                 else:    
                     validInput = False
 
@@ -109,25 +114,29 @@ class GameManager():
                     validInput = False
             
     def whoGoesFirst_Menu(self):
-        #for iterator in range(len(self.playerTurnList)):
+        #pdb.set_trace()
         for iterator in self.playerTurnList:
             if iterator.isAComputer() is False:
+                print("Debug: ", iterator)
+                print("Debug: ", iterator.isAComputer())
+                print("Debug: " , self.playerTurnList.printAll())
                 print("Press 1 to roll.")
                 self.receiveInput()
                 if self.userInput == '1':
                     iterator.setTurnNumber(self.rollDice())
                     #iterator.self.rollDice()
+
             elif iterator.isAComputer() is True:
                 iterator.setTurnNumber(self.rollDice())
             
-        print("Now adjusting turn orders.")
+        print("Now adjusting turn order.")
         self.playerTurnList.sort()
         iterator = 0
         displayNumber = 0
         for iterator in self.playerTurnList:
             iterator += 1
             print(displayNumber, " ", iterator.getName())
-        
+        self.setCurrentPlayer(self.playerTurnList.getFirstPlayer())
         self.setCurrentGameState(gameState.TURN_MENU)
 
 

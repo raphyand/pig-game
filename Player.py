@@ -40,14 +40,15 @@ class Player():
     
     def getTurnNumber(self):
         return self.turnNumber
-        
+
     #def updatePlayerTurn(self, scoreToAdd):
     #    pass
 class Computer(Player):
     def __init__(self, name, currentScore, totalScore, timesRolled, isComputer, Behavior):
         super().__init__(name, currentScore, totalScore, timesRolled, isComputer)
-        self._nameList = list("Alexa the Despacito", "SkyNet", "Johnny 5", "Terminator", "Henry the Robot")
+        self._nameList = list(["Alexa the Despacito", "SkyNet", "Johnny 5", "Terminator", "Henry the Robot"])
         self.Behavior = Behavior
+        self.isComputer = True
 
     def instantiateName(self):
         self.name = random.choice(self._nameList)
