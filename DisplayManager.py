@@ -18,7 +18,9 @@ class DisplayManager():
         print("Score for the turn:", GameManagerCurrentScore)
         print("1. Roll")
         print("2. Hold")
+        print("")
 
     def printPlayerSelection(self):
         print("How many players in total are there? (Including Yourself)")
         print("Maximum amount is 4 Players.")
+        print("")

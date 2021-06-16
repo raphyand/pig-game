@@ -1,5 +1,5 @@
 import random
-#from utils import AIBehaviors
+from utils import AIBehaviors
 class Player():
     def __init__(self, name, totalScore, timesRolled, isComputer):
         self.name = name
@@ -31,6 +31,9 @@ class Player():
     def getTimesRolled(self):
         return self.timesRolled
 
+    def clearTimesRolled(self):
+        self.timesRolled = 0
+
     def isAComputer(self):
         return self.isComputer
     
@@ -51,11 +54,11 @@ class Computer(Player):
         self.name = random.choice(self._nameList)
 
     def actOnBehavior(self):
-        #if self.Behavior is AIBehaviors.TESTING:
-        #    if self.getTimesRolled() < 5:
-        #        return '1'
-        #    else:
-        #        return '2'
-        #if self.Behavior is AIBehaviors.NEUTRAL:
-        #    pass
-        pass
+        if self.Behavior is AIBehaviors.TESTING:
+            if self.getTimesRolled() < 5:
+                return '1'
+            else:
+                return '2'
+        if self.Behavior is AIBehaviors.NEUTRAL:
+            pass
+        #pass

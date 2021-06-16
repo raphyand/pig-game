@@ -1,4 +1,5 @@
 import random, pdb
+import time
 from Player import Player, Computer
 from utils import gameState
 from DisplayManager import DisplayManager
@@ -46,7 +47,7 @@ class GameManager():
         self._currentPlayer = self.playerTurnList.getIndex(playerIndex)
 
     def receiveInput(self):
-        self.userInput = input(">>")
+        self.userInput = input(">> ")
 
     def getUserInput(self):
         return self.userInput
@@ -55,7 +56,7 @@ class GameManager():
         result = self.die.randint(1, 6)
         if displayText is True:
             print("Dice is being rolled...")
-            print("Rolled a", result)
+            print("Rolled a", result, "\n")
         return result
 
     def hold(self):
@@ -91,7 +92,7 @@ class GameManager():
     def playerSelectionMenu(self):
         validInput = True
         if self.userInput == '1':
-            userName = input("Please enter your name.")
+            userName = input("Please enter your name.\n")
             self.playerTurnList.addPlayer(userName)
             while validInput is True:  
                 self.myDisplayManager.printPlayerSelection()
@@ -128,8 +129,6 @@ class GameManager():
                 elif int(self.userInput) - amountOfPlayers > 0:
                     humanPlayers = int(self.userInput) - amountOfPlayers
                     iterator = 0
-                    #for iterator in range()
-                    #self.playerTurnList.a
                     self.setCurrentGameState(gameState.WHO_GOES_FIRST)
                     break
                 else:
@@ -149,25 +148,28 @@ class GameManager():
         print("Now adjusting turn order.")
         self.playerTurnList.sort()
         displayNumber = 0
-        pdb.set_trace()
         for itera in self.playerTurnList:
             displayNumber += 1
             print(displayNumber, ".", itera.getName())
 
         self.setCurrentPlayer(self.playerTurnList.getFirstPlayer())
+        #Sleep for a bit
+        time.sleep(1.5)
         self.setCurrentGameState(gameState.TURN_MENU)
+
 
     def turnMenu(self, currentPlayer):
         self.playerTurnList.activateCircular()
         for players in self.playerTurnList:
+            self._currentPlayer = players
             endTurnFlag = False
             while endTurnFlag is False:
                 if players.isAComputer() is False:
-                    self.myDisplayManager.printTurnMenu(currentPlayer.getName(), currentPlayer.getTotalScore(),  self._currentScore)
+                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore)
                     self.receiveInput()
                     if self.userInput == '1':
                         result = self.rollDice(True)
-                        if result is 1:
+                        if result == 1:
                             self._currentScore = 0
                             self.hold()
                             print("You rolled a 1! Tough Luck!")
@@ -184,16 +186,17 @@ class GameManager():
 
                 elif players.isAComputer() is True:
                     self.userInput = players.actOnBehavior()
-                    self.myDisplayManager.printTurnMenu(currentPlayer.getName(), currentPlayer.getTotalScore(),  self._currentScore)
+                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore)
                     if self.userInput == '1':
                         result = self.rollDice(True)
-                        if result is 1:
+                        if result == 1:
                             self._currentScore = 0
                             self.hold()
                             print("You rolled a 1! Tough Luck!")
                             endTurnFlag = True
                         else:
                             self._currentScore = self._currentScore + result
+                            time.sleep(1.5)
                     elif self.userInput == '2':
                         endTurnFlag = True
                         #Program a Hold

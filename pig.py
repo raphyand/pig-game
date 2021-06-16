@@ -13,7 +13,6 @@
 from GameManager import GameManager
 
 def main():
-
     myGameManager = GameManager(0,0)
     myGameManager.coreGamePlayLoop()
 
