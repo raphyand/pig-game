@@ -1,7 +1,8 @@
 import random, pdb
 from Player import Player, Computer
-from utils import gameState, playerQueue
+from utils import gameState
 from DisplayManager import DisplayManager
+from playerQueue import playerQueue
 
 # Holds the rules and back-end game setup
 class GameManager():

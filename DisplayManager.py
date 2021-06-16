@@ -22,5 +22,3 @@ class DisplayManager():
     def printPlayerSelection(self):
         print("How many players in total are there? (Including Yourself)")
         print("Maximum amount is 4 Players.")
-
-    
