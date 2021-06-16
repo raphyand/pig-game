@@ -162,7 +162,7 @@ class GameManager():
             endTurnFlag = False
             while endTurnFlag is False:
                 if players.isAComputer() is False:
-                    self.myDisplayManager.printTurnMenu(currentPlayer, self)
+                    self.myDisplayManager.printTurnMenu(currentPlayer.getName(), currentPlayer.getTotalScore(),  self._currentScore)
                     self.receiveInput()
                     if self.userInput == '1':
                         result = self.rollDice(True)
