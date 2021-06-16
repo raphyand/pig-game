@@ -28,6 +28,9 @@ class Player():
     def addToTotalScore(self, turnScore):
         self.totalScore = self.totalScore + turnScore
 
+    def incrementTimesRolled(self):
+        self.timesRolled = self.timesRolled + 1
+
     def getTimesRolled(self):
         return self.timesRolled
 

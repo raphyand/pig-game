@@ -61,6 +61,8 @@ class GameManager():
 
     def hold(self):
         self._currentPlayer.addToTotalScore(self._currentScore)
+        self._currentPlayer.clearTimesRolled()
+        self._currentScore = 0
 
     def coreGamePlayLoop(self):
        while self.getCurrentGameState() is not gameState.GAMEOVER:
@@ -72,6 +74,9 @@ class GameManager():
                 self.whoGoesFirst_Menu()
             elif(self.getCurrentGameState() is gameState.TURN_MENU):
                 self.turnMenu(self.getCurrentPlayer())
+            elif(self.getCurrentGameState() is gameState.MATCH_END):
+                self.matchEndMenu()
+
        exit()
 
     def mainMenu(self):
@@ -146,6 +151,7 @@ class GameManager():
                 iterator.setTurnNumber(self.rollDice(False))
             
         print("Now adjusting turn order.")
+        self.myDisplayManager.printTransition(3, 0.5)
         self.playerTurnList.sort()
         displayNumber = 0
         for itera in self.playerTurnList:
@@ -154,21 +160,23 @@ class GameManager():
 
         self.setCurrentPlayer(self.playerTurnList.getFirstPlayer())
         #Sleep for a bit
-        time.sleep(1.5)
+        #time.sleep(1.5)
+        self.myDisplayManager.printTransition(3, 1)        
         self.setCurrentGameState(gameState.TURN_MENU)
-
 
     def turnMenu(self, currentPlayer):
         self.playerTurnList.activateCircular()
+        gameWon = False
         for players in self.playerTurnList:
             self._currentPlayer = players
             endTurnFlag = False
             while endTurnFlag is False:
                 if players.isAComputer() is False:
-                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore)
+                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore, players.getTimesRolled())
                     self.receiveInput()
                     if self.userInput == '1':
                         result = self.rollDice(True)
+                        players.incrementTimesRolled()                        
                         if result == 1:
                             self._currentScore = 0
                             self.hold()
@@ -182,25 +190,48 @@ class GameManager():
                         endTurnFlag = True
                         #Program a Hold
                         self.hold()
+                        if players.getTotalScore() >= 100:
+                            print(players.getName(), "you win!")
+                            gameWon = True
+                            break
                         endTurnFlag = True
 
                 elif players.isAComputer() is True:
                     self.userInput = players.actOnBehavior()
-                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore)
+                    self.myDisplayManager.printTurnMenu(players.getName(), players.getTotalScore(),  self._currentScore, players.getTimesRolled())
                     if self.userInput == '1':
                         result = self.rollDice(True)
+                        players.incrementTimesRolled()
                         if result == 1:
                             self._currentScore = 0
                             self.hold()
-                            print("You rolled a 1! Tough Luck!")
+                            print("You rolled a 1! Tough Luck!\n")
                             endTurnFlag = True
                         else:
                             self._currentScore = self._currentScore + result
-                            time.sleep(1.5)
+                            #time.sleep(1.5)
+                            self.myDisplayManager.printTransition(3, .5)
                     elif self.userInput == '2':
                         endTurnFlag = True
                         #Program a Hold
                         self.hold()
+                        if players.getTotalScore() >= 100:
+                            print(players.getName(), "you win!")
+                            gameWon = True
+                            break                    
                         endTurnFlag = True
 
+            if gameWon is True:
+                break        
+            self.myDisplayManager.printTransition(3, 0.5)
         # Terminate here
+        self.setCurrentGameState(gameState.MATCH_END)
+
+    def matchEndMenu(self):
+        self.myDisplayManager.printMatchEndMenu()
+        self.receiveInput()
+        if self.userInput == '1':
+            self.setCurrentGameState(gameState.MAIN_MENU)
+        elif self.userInput == '2':
+            self.setCurrentGameState(gameState.GAMEOVER)
+        
