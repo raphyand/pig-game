@@ -1,9 +1,9 @@
-import utils
 import random
+#from utils import AIBehaviors
 class Player():
-    def __init__(self, name, currentScore, totalScore, timesRolled, isComputer):
+    def __init__(self, name, totalScore, timesRolled, isComputer):
         self.name = name
-        self.currentScore = currentScore
+        #self.currentScore = currentScore
         self.totalScore = totalScore
         self.timesRolled = timesRolled
         self.isComputer = isComputer
@@ -11,7 +11,6 @@ class Player():
     #Remove currentScore and move it to Game Manager; once the turnScore in Game Manager is finished, THEN you should add it to playerScore
     def printPlayerSheet(self):
         print("Name: ", self.name)
-        print("Current Score: ", self.currentScore)
         print("Total Score: ", self.totalScore)
         print("Times rolled this turn: ", self.timesRolled)
         print("Is a Computer? : ", self.isComputer)
@@ -22,12 +21,12 @@ class Player():
 
     def getName(self):
         return self.name
-
-    def getCurrentScore(self):
-        return self.currentScore
     
     def getTotalScore(self):
         return self.totalScore
+
+    def addToTotalScore(self, turnScore):
+        self.totalScore = self.totalScore + turnScore
 
     def getTimesRolled(self):
         return self.timesRolled
@@ -41,14 +40,22 @@ class Player():
     def getTurnNumber(self):
         return self.turnNumber
 
-    #def updatePlayerTurn(self, scoreToAdd):
-    #    pass
 class Computer(Player):
-    def __init__(self, name, currentScore, totalScore, timesRolled, isComputer, Behavior):
-        super().__init__(name, currentScore, totalScore, timesRolled, isComputer)
+    def __init__(self, name, totalScore, timesRolled, isComputer, Behavior):
+        super().__init__(name, totalScore, timesRolled, isComputer)
         self._nameList = list(["Alexa the Despacito", "SkyNet", "Johnny 5", "Terminator", "Henry the Robot"])
         self.Behavior = Behavior
         self.isComputer = True
 
     def instantiateName(self):
         self.name = random.choice(self._nameList)
+
+    def actOnBehavior(self):
+        #if self.Behavior is AIBehaviors.TESTING:
+        #    if self.getTimesRolled() < 5:
+        #        return '1'
+        #    else:
+        #        return '2'
+        #if self.Behavior is AIBehaviors.NEUTRAL:
+        #    pass
+        pass

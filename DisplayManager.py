@@ -1,4 +1,5 @@
 from Player import Player, Computer
+#from GameManager import GameManager
 import random
 class DisplayManager():
     def __init__(self):
@@ -10,8 +11,11 @@ class DisplayManager():
         print("\t2.Multiplayer")
         print("\t3.Quit")
 
-    def printTurnMenu(self, Player):
-        print(Player.getName(), "\'s Turn")
+    #Instead of myGameManager, pass in an int
+    def printTurnMenu(self, PlayerName, PlayerTotalScore, GameManagerCurrentScore):
+        print(PlayerName, "\'s Turn")
+        print("Total Score:", PlayerTotalScore)
+        print("Score for the turn:", GameManagerCurrentScore)
         print("1. Roll")
         print("2. Hold")
 

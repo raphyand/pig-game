@@ -3,6 +3,7 @@ from Player import Player, Computer
 import pdb
 
 class AIBehaviors(Enum):
+    TESTING = -1
     NEUTRAL = 0
     COCKY = 1
     RESERVED = 2
@@ -41,6 +42,7 @@ class playerQueue:
         if self._counter >= len(self._players) and self._circular is True:
             self._counter = 0
         elif self._counter >= len(self._players) and self._circular is False:
+            self._counter = 0
             raise StopIteration 
 
         player = self._players[self._counter]
@@ -74,11 +76,12 @@ class playerQueue:
             print(iterator)
 
     def addPlayer(self, playerName):
-        playerToAdd = Player(None, 0, 0, 0, False)
+        playerToAdd = Player(None, 0, 0, False)
         playerToAdd.setName(playerName)
         self._players.append(playerToAdd)
 
     def addComputer(self):
-        computerToAdd = Computer(None, 0,0,0, True, AIBehaviors.NEUTRAL)
+        computerToAdd = Computer(None, 0,0, True, AIBehaviors.NEUTRAL)
+        computerToAdd.instantiateName()
         self._players.append(computerToAdd)
 

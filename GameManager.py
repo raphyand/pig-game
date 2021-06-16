@@ -15,12 +15,22 @@ class GameManager():
         self.userInput = None
         self._currentGameState = gameState.MAIN_MENU
         self._currentPlayer = self.playerTurnList.getIndex(0)
+        self._currentScore = 0
 
     def setCurrentGameState(self, gameStateToChange):
         self._currentGameState = gameStateToChange
 
     def getCurrentGameState(self):
         return self._currentGameState
+
+    def setCurrentScore(self, score):
+        self._currentScore = score
+    
+    def getCurrentScore(self):
+        return self._currentScore
+
+    def getMode(self):
+        return self.mode
 
     def setMode(self, modeValue):
         self.mode = modeValue
@@ -35,20 +45,32 @@ class GameManager():
         self._currentPlayer = self.playerTurnList.getIndex(playerIndex)
 
     def receiveInput(self):
-        self.userInput = input("Please Enter a choice.")
-        #print("Debug: User Input is: ", self.userInput)
-        #print (type(self.userInput))
-        #return self.userInput
+        self.userInput = input(">>")
 
     def getUserInput(self):
         return self.userInput
 
-    def rollDice(self):
-        #result = random.randrange(0, 5)
+    def rollDice(self, displayText):
         result = self.die.randint(1, 6)
-        print("Dice is being rolled...")
-        print("Rolled a", result)
+        if displayText is True:
+            print("Dice is being rolled...")
+            print("Rolled a", result)
         return result
+
+    def hold(self):
+        self._currentPlayer.addToTotalScore(self._currentScore)
+
+    def coreGamePlayLoop(self):
+       while self.getCurrentGameState() is not gameState.GAMEOVER:
+            if (self.getCurrentGameState() is gameState.MAIN_MENU):
+                self.mainMenu()
+            elif(self.getCurrentGameState() is gameState.PLAYER_SELECTION_MENU):
+                self.playerSelectionMenu()
+            elif(self.getCurrentGameState() is gameState.WHO_GOES_FIRST):
+                self.whoGoesFirst_Menu()
+            elif(self.getCurrentGameState() is gameState.TURN_MENU):
+                self.turnMenu(self.getCurrentPlayer())
+       exit()
 
     def mainMenu(self):
         self.myDisplayManager.printMainMenu()
@@ -64,7 +86,6 @@ class GameManager():
         elif self.getUserInput() == '3':
             self.setCurrentGameState(gameState.GAMEOVER)
             print("Game Over!")
-
 
     def playerSelectionMenu(self):
         validInput = True
@@ -114,40 +135,68 @@ class GameManager():
                     validInput = False
             
     def whoGoesFirst_Menu(self):
-        #pdb.set_trace()
         for iterator in self.playerTurnList:
             if iterator.isAComputer() is False:
-                print("Debug: ", iterator)
-                print("Debug: ", iterator.isAComputer())
-                print("Debug: " , self.playerTurnList.printAll())
                 print("Press 1 to roll.")
                 self.receiveInput()
                 if self.userInput == '1':
-                    iterator.setTurnNumber(self.rollDice())
-                    #iterator.self.rollDice()
+                    iterator.setTurnNumber(self.rollDice(True))
 
             elif iterator.isAComputer() is True:
-                iterator.setTurnNumber(self.rollDice())
+                iterator.setTurnNumber(self.rollDice(False))
             
         print("Now adjusting turn order.")
         self.playerTurnList.sort()
-        iterator = 0
         displayNumber = 0
-        for iterator in self.playerTurnList:
-            iterator += 1
-            print(displayNumber, " ", iterator.getName())
+        pdb.set_trace()
+        for itera in self.playerTurnList:
+            displayNumber += 1
+            print(displayNumber, ".", itera.getName())
+
         self.setCurrentPlayer(self.playerTurnList.getFirstPlayer())
         self.setCurrentGameState(gameState.TURN_MENU)
 
-
     def turnMenu(self, currentPlayer):
-        self.myDisplayManager.printTurnMenu(currentPlayer)
-        self.receiveInput()
-        if self.userInput == 1:
-            #Throw dice, then update 
-            pass
-        elif self.userInput == 2:
-            #Program a Hold
-            pass
+        self.playerTurnList.activateCircular()
+        for players in self.playerTurnList:
+            endTurnFlag = False
+            while endTurnFlag is False:
+                if players.isAComputer() is False:
+                    self.myDisplayManager.printTurnMenu(currentPlayer, self)
+                    self.receiveInput()
+                    if self.userInput == '1':
+                        result = self.rollDice(True)
+                        if result is 1:
+                            self._currentScore = 0
+                            self.hold()
+                            print("You rolled a 1! Tough Luck!")
+                            endTurnFlag = True
+                        else:
+                            self._currentScore = self._currentScore + result
+                            print("Your current score:", self._currentScore)
+                        
+                    elif self.userInput == '2':
+                        endTurnFlag = True
+                        #Program a Hold
+                        self.hold()
+                        endTurnFlag = True
 
-        
+                elif players.isAComputer() is True:
+                    self.userInput = players.actOnBehavior()
+                    self.myDisplayManager.printTurnMenu(currentPlayer.getName(), currentPlayer.getTotalScore(),  self._currentScore)
+                    if self.userInput == '1':
+                        result = self.rollDice(True)
+                        if result is 1:
+                            self._currentScore = 0
+                            self.hold()
+                            print("You rolled a 1! Tough Luck!")
+                            endTurnFlag = True
+                        else:
+                            self._currentScore = self._currentScore + result
+                    elif self.userInput == '2':
+                        endTurnFlag = True
+                        #Program a Hold
+                        self.hold()
+                        endTurnFlag = True
+
+        # Terminate here
