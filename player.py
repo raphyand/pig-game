@@ -76,31 +76,16 @@ class Computer(Player):
         if self.behavior is AiBehaviors.TESTING:
             if self.get_times_rolled() < 5:
                 return '1'
-            #else:
-            #    return '2'
         if self.behavior is AiBehaviors.NEUTRAL:
             if self.get_times_rolled() < 3:
                 return '1'
-            #else:
-            #    return '2'
         if self.behavior is AiBehaviors.COCKY:
             if self.get_times_rolled() < 8:
                 return '1'
-            #else:
-            #    return '2'
         if self.behavior is AiBehaviors.RESERVED:
             if self.get_times_rolled() < 2:
                 return '1'
-            #else:
-            #    return '2'
         if self.behavior is AiBehaviors.AVERAGE:
             if self.get_times_rolled() < 4:
                 return '1'
-            #else: 
-            #    return '2'
         return '2'
-
-
-
-        
-        

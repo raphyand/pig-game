@@ -20,9 +20,11 @@ class PlayerQueue:
     def stop(self):
         """Stop for iteration"""
         self._should_stop = True
+
     def __iter__(self):
         """Custom Iterator"""
         return self
+
     def __next__(self):
         """Custom traversal __next__ to handle circular traversal options."""
         if self._should_stop:
@@ -45,10 +47,6 @@ class PlayerQueue:
     def is_empty(self):
         """Check if list is empty"""
         return bool(len(self._players) == 0)
-        #if len(self._players) == 0:
-        #    return True
-        #else:
-        #    return False
 
     def get_first_player(self):
         """Get first player of the list"""
@@ -77,6 +75,5 @@ class PlayerQueue:
     def add_computer(self):
         """Add Computer Player to the queue"""
         computer_to_add = Computer(None, 0,0, True, random.choice(list(AiBehaviors)))
-        #computer_to_add = Computer(None, 99,0, True, AiBehaviors.RESERVED)
         computer_to_add.instantiate_name()
         self._players.append(computer_to_add)
