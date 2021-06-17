@@ -1,5 +1,5 @@
 """Player Queue module custom player queue data structure, using a list."""
-from Player import Player, Computer
+from player import Player, Computer
 from utils import AiBehaviors
 class PlayerQueue:
     """Player Queue class."""
@@ -56,7 +56,7 @@ class PlayerQueue:
     def is_computer_generator(self, player):
         """Computer Generator for certain use-cases."""
         for _player in self._players:
-            yield Player.isAComputer(player)
+            yield Player.is_a_computer(player)
 
     def sort(self):
         """Sort Player queue in descending order."""
@@ -70,11 +70,11 @@ class PlayerQueue:
     def add_player(self, player_name):
         """Add a human player to the queue."""
         player_to_add = Player(None, 0, 0, False)
-        player_to_add.setName(player_name)
+        player_to_add.set_name(player_name)
         self._players.append(player_to_add)
 
     def add_computer(self):
         """Add Computer Player to the queue"""
         computer_to_add = Computer(None, 0,0, True, AiBehaviors.TESTING)
-        computer_to_add.instantiateName()
+        computer_to_add.instantiate_name()
         self._players.append(computer_to_add)
