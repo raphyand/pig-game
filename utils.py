@@ -6,8 +6,7 @@ class AiBehaviors(Enum):
     NEUTRAL = 0
     COCKY = 1
     RESERVED = 2
-    OPTIMAL = 3
-    AVERAGE = 4
+    AVERAGE = 3
 class GameState(Enum):
     """Game State Enumerations"""
     MAIN_MENU = 0

@@ -1,6 +1,7 @@
 """Game Manager: Handles all things relating to Pig's internal execution."""
 import random
 import display_manager
+
 from utils import GameState
 from player_queue import PlayerQueue
 
@@ -54,8 +55,8 @@ class GameManager():
     def hold(self):
         """Hold the turn, adding current score to total score
         and then setting times rolled to zero"""
-        self._current_player.addToTotalScore(self._current_score)
-        self._current_player.clearTimesRolled()
+        self._current_player.add_to_total_score(self._current_score)
+        self._current_player.clear_times_rolled()
         self._current_score = 0
 
     def core_game_play_loop(self):
@@ -153,20 +154,20 @@ class GameManager():
     def who_goes_first_menu(self):
         """Who-Goes-First Menu method where Who-Goes-First display and inputs are handled"""
         for iterator in self.player_turn_list:
-            if iterator.isAComputer() is False:
+            if iterator.is_a_computer() is False:
                 print("Press 1 to roll.")
                 self.receive_input()
                 if self.user_input == '1':
-                    iterator.setTurnNumber(self.roll_dice(True))
-            elif iterator.isAComputer() is True:
-                iterator.setTurnNumber(self.roll_dice(False))
+                    iterator.set_turn_number(self.roll_dice(True))
+            elif iterator.is_a_computer() is True:
+                iterator.set_turn_number(self.roll_dice(False))
         print("Now adjusting turn order.")
         display_manager.print_transition(3, 0.5)
         self.player_turn_list.sort()
         display_number = 0
         for itera in self.player_turn_list:
             display_number += 1
-            print(display_number, ".", itera.getName())
+            print(display_number, ".", itera.get_name())
 
         self.set_current_player(self.player_turn_list.get_first_player())
         display_manager.print_transition(3, 1)
@@ -181,13 +182,13 @@ class GameManager():
             end_turn_flag = False
             #valid_input = True
             while end_turn_flag is False:
-                if players.isAComputer() is False:
-                    display_manager.print_turn_menu(players.getName(),
-                    players.getTotalScore(),self._current_score, players.getTimesRolled())
+                if players.is_a_computer() is False:
+                    display_manager.print_turn_menu(players.get_name(),
+                    players.get_total_score(),self._current_score, players.get_times_rolled())
                     self.receive_input()
                     if self.user_input == '1':
                         result = self.roll_dice(True)
-                        players.incrementTimesRolled()
+                        players.increment_times_rolled()
                         if result == 1:
                             self._current_score = 0
                             self.hold()
@@ -202,18 +203,18 @@ class GameManager():
                         end_turn_flag = True
                         #Program a Hold
                         self.hold()
-                        if players.getTotalScore() >= 100:
-                            print(players.getName(), "you win!")
+                        if players.get_total_score() >= 100:
+                            print(players.get_name(), "you win!")
                             game_won = True
                             break
                         end_turn_flag = True
-                elif players.isAComputer() is True:
-                    self.user_input = players.actOnBehavior()
-                    display_manager.print_turn_menu(players.getName(),
-                    players.getTotalScore(),self._current_score, players.getTimesRolled())
+                elif players.is_a_computer() is True:
+                    self.user_input = players.act_on_behavior()
+                    display_manager.print_turn_menu(players.get_name(),
+                    players.get_total_score(),self._current_score, players.get_times_rolled())
                     if self.user_input == '1':
                         result = self.roll_dice(True)
-                        players.incrementTimesRolled()
+                        players.increment_times_rolled()
                         if result == 1:
                             self._current_score = 0
                             self.hold()
@@ -227,9 +228,9 @@ class GameManager():
                     elif self.user_input == '2':
                         end_turn_flag = True
                         self.hold()
-                        if players.getTotalScore() >= 100:
-                            print(players.getName(), "you win!")
-                            #game_won = True
+                        if players.get_total_score() >= 100:
+                            print(players.get_name(), "you win!")
+                            game_won = True
                             self.set_current_game_state(GameState.MATCH_END)
                             break
                         end_turn_flag = True

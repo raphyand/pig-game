@@ -1,4 +1,5 @@
 """Player Queue module custom player queue data structure, using a list."""
+import random
 from player import Player, Computer
 from utils import AiBehaviors
 class PlayerQueue:
@@ -60,7 +61,7 @@ class PlayerQueue:
 
     def sort(self):
         """Sort Player queue in descending order."""
-        self._players.sort(key=lambda pq: pq.getTurnNumber(), reverse=True)
+        self._players.sort(key=lambda pq: pq.get_turn_number(), reverse= False)
 
     def print_all(self):
         """Print all players."""
@@ -75,6 +76,7 @@ class PlayerQueue:
 
     def add_computer(self):
         """Add Computer Player to the queue"""
-        computer_to_add = Computer(None, 0,0, True, AiBehaviors.TESTING)
+        computer_to_add = Computer(None, 0,0, True, random.choice(list(AiBehaviors)))
+        #computer_to_add = Computer(None, 99,0, True, AiBehaviors.RESERVED)
         computer_to_add.instantiate_name()
         self._players.append(computer_to_add)
