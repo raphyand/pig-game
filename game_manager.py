@@ -1,8 +1,8 @@
 """Game Manager: Handles all things relating to Pig's internal execution."""
 import random
 import display_manager
-from utils import gameState
-from playerQueue import playerQueue
+from utils import GameState
+from player_queue import PlayerQueue
 
 
 
@@ -10,10 +10,10 @@ from playerQueue import playerQueue
 class GameManager():
     """Game Manager: Handles all things relating to Pig's internal execution."""
     def __init__(self):
-        self.player_turn_list = playerQueue(list())
+        self.player_turn_list = PlayerQueue(list())
         self.die = random
         self.user_input = None
-        self._current_game_state = gameState.MAIN_MENU
+        self._current_game_state = GameState.MAIN_MENU
         self._current_score = 0
         self._current_player = None
 
@@ -37,7 +37,7 @@ class GameManager():
         self._current_player = player
     def set_current_player_by_index(self, player_index):
         """Set the currently active player by index"""
-        self._current_player = self.player_turn_list.getIndex(player_index)
+        self._current_player = self.player_turn_list.get_index(player_index)
     def receive_input(self):
         """Handle User Input"""
         self.user_input = input(">> ")
@@ -60,16 +60,16 @@ class GameManager():
 
     def core_game_play_loop(self):
         """Core Gameplay Loop method where states are determined and executed"""
-        while self.get_current_game_state() is not gameState.GAMEOVER:
-            if self.get_current_game_state() is gameState.MAIN_MENU:
+        while self.get_current_game_state() is not GameState.GAMEOVER:
+            if self.get_current_game_state() is GameState.MAIN_MENU:
                 self.main_menu()
-            elif self.get_current_game_state() is gameState.PLAYER_SELECTION_MENU:
+            elif self.get_current_game_state() is GameState.PLAYER_SELECTION_MENU:
                 self.player_selection_menu()
-            elif self.get_current_game_state() is gameState.WHO_GOES_FIRST:
+            elif self.get_current_game_state() is GameState.WHO_GOES_FIRST:
                 self.who_goes_first_menu()
-            elif self.get_current_game_state() is gameState.TURN_MENU:
+            elif self.get_current_game_state() is GameState.TURN_MENU:
                 self.turn_menu()
-            elif self.get_current_game_state() is gameState.MATCH_END:
+            elif self.get_current_game_state() is GameState.MATCH_END:
                 self.match_end_menu()
 
     def main_menu(self):
@@ -78,14 +78,14 @@ class GameManager():
         self.receive_input()
         if self.get_user_input() == '1':
             print("SinglePlayer")
-            self.set_current_game_state(gameState.PLAYER_SELECTION_MENU)
+            self.set_current_game_state(GameState.PLAYER_SELECTION_MENU)
 
         elif self.get_user_input() == '2':
             print("Multiplayer")
-            self.set_current_game_state(gameState.PLAYER_SELECTION_MENU)
+            self.set_current_game_state(GameState.PLAYER_SELECTION_MENU)
 
         elif self.get_user_input() == '3':
-            self.set_current_game_state(gameState.GAMEOVER)
+            self.set_current_game_state(GameState.GAMEOVER)
             print("Game Over!")
 
     def player_selection_menu(self):
@@ -96,7 +96,7 @@ class GameManager():
         while valid_input2 is True and should_change_state is False:
             if self.user_input == '1':
                 user_name = input("Please enter your name.\n")
-                self.player_turn_list.addPlayer(user_name)
+                self.player_turn_list.add_player(user_name)
                 while valid_input is True:
                     display_manager.print_player_selection()
                     self.receive_input()
@@ -105,8 +105,8 @@ class GameManager():
                         valid_input2 = False
                     elif int(self.user_input) > 1 and int(self.user_input) <= 4:
                         for _iterator in range(int(self.user_input) - 1):
-                            self.player_turn_list.addComputer()
-                        self.set_current_game_state(gameState.WHO_GOES_FIRST)
+                            self.player_turn_list.add_computer()
+                        self.set_current_game_state(GameState.WHO_GOES_FIRST)
                         should_change_state = True
                         break
                     #When user input is outside of range.
@@ -136,10 +136,10 @@ class GameManager():
                     or int(amount_of_computers) + int(human_players) < 5):
                         for _i in range(human_players):
                             user_name = input("Please enter your name.\n")
-                            self.player_turn_list.addPlayer(user_name)
+                            self.player_turn_list.add_player(user_name)
                         for _i in range(int(amount_of_computers)):
-                            self.player_turn_list.addComputer()
-                        self.set_current_game_state(gameState.WHO_GOES_FIRST)
+                            self.player_turn_list.add_computer()
+                        self.set_current_game_state(GameState.WHO_GOES_FIRST)
                         should_change_state = True
                         break
                     else:
@@ -168,13 +168,13 @@ class GameManager():
             display_number += 1
             print(display_number, ".", itera.getName())
 
-        self.set_current_player(self.player_turn_list.getFirstPlayer())
+        self.set_current_player(self.player_turn_list.get_first_player())
         display_manager.print_transition(3, 1)
-        self.set_current_game_state(gameState.TURN_MENU)
+        self.set_current_game_state(GameState.TURN_MENU)
 
     def turn_menu(self):
         """Turn Menu method where Turn Menu Selection display and inputs are handled"""
-        self.player_turn_list.activateCircular()
+        self.player_turn_list.activate_circular()
         game_won = False
         for players in self.player_turn_list:
             self._current_player = players
@@ -230,19 +230,19 @@ class GameManager():
                         if players.getTotalScore() >= 100:
                             print(players.getName(), "you win!")
                             #game_won = True
-                            self.set_current_game_state(gameState.MATCH_END)
+                            self.set_current_game_state(GameState.MATCH_END)
                             break
                         end_turn_flag = True
             if game_won is True:
                 break
             display_manager.print_transition(3, 0.5)
         # Terminate here
-        self.set_current_game_state(gameState.MATCH_END)
+        self.set_current_game_state(GameState.MATCH_END)
     def match_end_menu(self):
         """Match End Menu method where Matche End display and inputs are handled"""
         display_manager.print_match_end_menu()
         self.receive_input()
         if self.user_input == '1':
-            self.set_current_game_state(gameState.MAIN_MENU)
+            self.set_current_game_state(GameState.MAIN_MENU)
         elif self.user_input == '2':
-            self.set_current_game_state(gameState.GAMEOVER)
+            self.set_current_game_state(GameState.GAMEOVER)
