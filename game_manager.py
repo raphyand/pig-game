@@ -1,7 +1,7 @@
 """Game Manager: Handles all things relating to Pig's internal execution."""
 import random
 from utils import gameState
-from DisplayManager import DisplayManager
+from display_manager import DisplayManager
 from playerQueue import playerQueue
 
 
@@ -75,7 +75,7 @@ class GameManager():
 
     def main_menu(self):
         """Main Menu method where Main Menu display and inputs are handled"""
-        self.my_display_manager.printMainMenu()
+        self.my_display_manager.print_main_menu()
         self.receive_input()
         if self.get_user_input() == '1':
             print("SinglePlayer")
@@ -99,7 +99,7 @@ class GameManager():
                 user_name = input("Please enter your name.\n")
                 self.player_turn_list.addPlayer(user_name)
                 while valid_input is True:
-                    self.my_display_manager.printPlayerSelection()
+                    self.my_display_manager.print_player_selection()
                     self.receive_input()
                     #When user Input is valid.
                     if str.isalpha(self.user_input):
@@ -118,7 +118,7 @@ class GameManager():
                         valid_input = False
             elif self.user_input == '2':
                 while valid_input is True:
-                    self.my_display_manager.printPlayerSelection()
+                    self.my_display_manager.print_player_selection()
                     self.receive_input()
                     amount_of_players = int(self.user_input)
                     if int(self.user_input) <= 1 or int(self.user_input) > 4:
@@ -162,7 +162,7 @@ class GameManager():
             elif iterator.isAComputer() is True:
                 iterator.setTurnNumber(self.roll_dice(False))
         print("Now adjusting turn order.")
-        self.my_display_manager.printTransition(3, 0.5)
+        self.my_display_manager.print_transition(3, 0.5)
         self.player_turn_list.sort()
         display_number = 0
         for itera in self.player_turn_list:
@@ -170,7 +170,7 @@ class GameManager():
             print(display_number, ".", itera.getName())
 
         self.set_current_player(self.player_turn_list.getFirstPlayer())
-        self.my_display_manager.printTransition(3, 1)
+        self.my_display_manager.print_transition(3, 1)
         self.set_current_game_state(gameState.TURN_MENU)
 
     def turn_menu(self):
@@ -183,7 +183,7 @@ class GameManager():
             #valid_input = True
             while end_turn_flag is False:
                 if players.isAComputer() is False:
-                    self.my_display_manager.printTurnMenu(players.getName(),
+                    self.my_display_manager.print_turn_menu(players.getName(),
                     players.getTotalScore(),self._current_score, players.getTimesRolled())
                     self.receive_input()
                     if self.user_input == '1':
@@ -210,7 +210,7 @@ class GameManager():
                         end_turn_flag = True
                 elif players.isAComputer() is True:
                     self.user_input = players.actOnBehavior()
-                    self.my_display_manager.printTurnMenu(players.getName(),
+                    self.my_display_manager.print_turn_menu(players.getName(),
                     players.getTotalScore(),self._current_score, players.getTimesRolled())
                     if self.user_input == '1':
                         result = self.roll_dice(True)
@@ -224,7 +224,7 @@ class GameManager():
                         else:
                             self._current_score = self._current_score + result
                             #time.sleep(1.5)
-                            self.my_display_manager.printTransition(3, .5)
+                            self.my_display_manager.print_transition(3, .5)
                     elif self.user_input == '2':
                         end_turn_flag = True
                         self.hold()
@@ -236,12 +236,12 @@ class GameManager():
                         end_turn_flag = True
             if game_won is True:
                 break
-            self.my_display_manager.printTransition(3, 0.5)
+            self.my_display_manager.print_transition(3, 0.5)
         # Terminate here
         self.set_current_game_state(gameState.MATCH_END)
     def match_end_menu(self):
         """Match End Menu method where Matche End display and inputs are handled"""
-        self.my_display_manager.printMatchEndMenu()
+        self.my_display_manager.print_match_end_menu()
         self.receive_input()
         if self.user_input == '1':
             self.set_current_game_state(gameState.MAIN_MENU)
