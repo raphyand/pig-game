@@ -26,7 +26,7 @@ class DisplayManager():
         print("")
 
     def printTransition(self, dots, timeBetween):
-        for i in range(dots):
+        for _i in range(dots):
             print(".")
             time.sleep(timeBetween)
 
