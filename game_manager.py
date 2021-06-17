@@ -1,5 +1,5 @@
 """Game Manager: Handles all things relating to Pig's internal execution."""
-import random
+import random, pdb
 from utils import gameState
 from DisplayManager import DisplayManager
 from playerQueue import playerQueue
@@ -80,13 +80,15 @@ class GameManager():
     def player_selection_menu(self):
         valid_input = True
         valid_input2 = True
-        while valid_input2 is True:
+        shouldChangeState = False
+        while valid_input2 is True and shouldChangeState is False:
             if self.user_input == '1':
                 user_name = input("Please enter your name.\n")
                 self.player_turn_list.addPlayer(user_name)
                 while valid_input is True:
                     self.my_display_manager.printPlayerSelection()
                     self.receive_input()
+                    #pdb.set_trace()
                     #When user Input is valid.
                     if str.isalpha(self.user_input):
                         valid_input2 = False
@@ -94,6 +96,7 @@ class GameManager():
                         for iterator in range(int(self.user_input) - 1):
                             self.player_turn_list.addComputer()
                         self.set_current_game_state(gameState.WHO_GOES_FIRST)
+                        shouldChangeState = True
                         break
                     #When user input is outside of range.
                     elif int(self.user_input) <= 1 or int(self.user_input) > 4:
@@ -112,13 +115,21 @@ class GameManager():
                         valid_input = False
                     print("How many computers?")
                     self.receive_input()
-                    if int(self.user_input) - amount_of_players < 0:
+                    amount_of_computers = int(self.user_input)
+                    human_players = amount_of_players - int(amount_of_computers)
+                    
+                    if int(amount_of_computers) + int(human_players) > 4 or int(amount_of_computers) + int(human_players) < 0:
                         print("Invalid amount of players.")
                         valid_input = False
-                    elif int(self.user_input) - amount_of_players > 0:
-                        human_players = int(self.user_input) - amount_of_players
-                        iterator = 0
+                    elif int(amount_of_computers) + int(human_players) > 0 or int(amount_of_computers) + int(human_players) < 5:
+                        for i in range(human_players):
+                            user_name = input("Please enter your name.\n")
+                            self.player_turn_list.addPlayer(user_name)
+                            #pdb.set_trace()
+                        for i in range(int(amount_of_computers)):
+                            self.player_turn_list.addComputer()
                         self.set_current_game_state(gameState.WHO_GOES_FIRST)
+                        shouldChangeState = True
                         break
                     else:
                         valid_input = False
@@ -171,10 +182,12 @@ class GameManager():
                             self._current_score = 0
                             self.hold()
                             print("You rolled a 1! Tough Luck!")
+                            #return True
                             end_turn_flag = True
                         else:
                             self._current_score = self._current_score + result
-                            print("Your current score:", self._current_score)
+                            print("Your current score:", self._current_score)               
+                        #end_turn_flag = self.resolve_rolling(players)
                     elif self.user_input == '2':
                         end_turn_flag = True
                         #Program a Hold
@@ -196,17 +209,18 @@ class GameManager():
                             self.hold()
                             print("You rolled a 1! Tough Luck!\n")
                             end_turn_flag = True
+                            #return True
                         else:
                             self._current_score = self._current_score + result
                             #time.sleep(1.5)
                             self.my_display_manager.printTransition(3, .5)
                     elif self.user_input == '2':
                         end_turn_flag = True
-                        #Program a Hold
                         self.hold()
                         if players.getTotalScore() >= 100:
                             print(players.getName(), "you win!")
-                            game_won = True
+                            #game_won = True
+                            self.set_current_game_state(gameState.MATCH_END)
                             break
                         end_turn_flag = True
             if game_won is True:
@@ -214,6 +228,33 @@ class GameManager():
             self.my_display_manager.printTransition(3, 0.5)
         # Terminate here
         self.set_current_game_state(gameState.MATCH_END)
+
+    def resolve_rolling(self, players):
+        result = self.roll_dice(True)
+        players.incrementTimesRolled()
+        if result == 1:
+            self._current_score = 0
+            self.hold()
+            print("You rolled a 1! Tough Luck!")
+            return True
+            #end_turn_flag = True
+        else:
+            self._current_score = self._current_score + result
+            print("Your current score:", self._current_score)       
+    
+    def resolve_rolling_computer(self, players):
+        result = self.roll_dice(True)
+        players.incrementTimesRolled()
+        if result == 1:
+            self._current_score = 0
+            self.hold()
+            print("You rolled a 1! Tough Luck!\n")
+            #end_turn_flag = True
+            return True
+        else:
+            self._current_score = self._current_score + result
+            #time.sleep(1.5)
+            self.my_display_manager.printTransition(3, .5)
 
     def player_turn(self):
         pass
