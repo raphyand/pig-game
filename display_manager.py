@@ -4,6 +4,13 @@ import time
 def print_main_menu():
     """Prints Main Menu"""
     print("Hello! Welcome to Pig.")
+    print("Rules: \n\tRoll a die to see who goes first, ascending-order-wise.")
+    print("\tRoll until you like the score you currently have.")
+    print("""\tHold to keep the score and add it to your total score;
+    \tthen pass the die to the next player.""")
+    print("""\tIf you roll a 1, you lose all your current turn's accumulated score,
+    \tand must pass the die.""")
+    print("\tThe first to 100 wins. \nHave fun!\n")
     print("\t1.SinglePlayer")
     print("\t2.Multiplayer")
     print("\t3.Quit")
