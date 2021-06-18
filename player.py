@@ -73,19 +73,24 @@ class Computer(Player):
 
     def act_on_behavior(self):
         """Act on a specific behavior based on Ai Behavior Enums"""
-        if self.behavior is AiBehaviors.TESTING:
-            if self.get_times_rolled() < 5:
-                return '1'
-        if self.behavior is AiBehaviors.NEUTRAL:
-            if self.get_times_rolled() < 3:
-                return '1'
-        if self.behavior is AiBehaviors.COCKY:
-            if self.get_times_rolled() < 8:
-                return '1'
-        if self.behavior is AiBehaviors.RESERVED:
+        if self.get_total_score() >= 90:
             if self.get_times_rolled() < 2:
                 return '1'
-        if self.behavior is AiBehaviors.AVERAGE:
-            if self.get_times_rolled() < 4:
-                return '1'
+        else:
+            if self.behavior is AiBehaviors.TESTING:
+                if self.get_times_rolled() < 5:
+                    return '1'
+            if self.behavior is AiBehaviors.NEUTRAL:
+                if self.get_times_rolled() < 3:
+                    return '1'
+            if self.behavior is AiBehaviors.COCKY:
+                if self.get_times_rolled() < 8:
+                    return '1'
+            if self.behavior is AiBehaviors.RESERVED:
+                if self.get_times_rolled() < 2:
+                    return '1'
+            if self.behavior is AiBehaviors.AVERAGE:
+                if self.get_times_rolled() < 4:
+                    return '1'
+            return '2'
         return '2'
