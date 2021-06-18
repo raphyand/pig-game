@@ -1,7 +1,6 @@
 """Game Manager: Handles all things relating to Pig's internal execution."""
 import random
 import display_manager
-import pdb
 from utils import GameState
 from player_queue import PlayerQueue
 
@@ -17,7 +16,6 @@ class GameManager():
         self._current_game_state = GameState.MAIN_MENU
         self._current_score = 0
         self._current_player = None
-        self._isolated_input = None
 
     def set_current_game_state(self, game_state_to_change):
         """Set current Game State"""
@@ -55,6 +53,14 @@ class GameManager():
         """Get User Input Cached Value"""
         return self.user_input
 
+    def get_mode(self):
+        """Get game mode value"""
+        return self._mode
+
+    def set_mode(self, mode):
+        """Set game mode value"""
+        self._mode = mode
+
     def roll_dice(self, display_text):
         """Roll dice, with option to display affirmation text."""
         result = self.die.randint(1, 6)
@@ -90,26 +96,27 @@ class GameManager():
         self.receive_input()
         if self.get_user_input() == '1':
             print("SinglePlayer")
-            self._mode = 1
+            self.set_mode(1)
+            #self._mode = 1
             self.set_current_game_state(GameState.PLAYER_SELECTION_MENU)
 
         elif self.get_user_input() == '2':
             print("Multiplayer")
-            self._mode = 2
+            self.set_mode(2)
+            #self._mode = 2
             self.set_current_game_state(GameState.PLAYER_SELECTION_MENU)
 
         elif self.get_user_input() == '3':
-            self._mode = 3
+            self.set_mode(3)
+            #self._mode = 3
             self.set_current_game_state(GameState.GAMEOVER)
             print("Game Over!")
-        self._isolated_input = self.get_user_input()
 
     def player_selection_menu(self):
         """Player Selection Menu method where Player Selection display and inputs are handled"""
         valid_input = True
         valid_input2 = True
         should_change_state = False
-        #remember_choice = self.user_input
 
         #While loop for sanity check and determine if Game State should be changed
         while valid_input2 is True and should_change_state is False:
@@ -146,18 +153,19 @@ class GameManager():
                 while valid_input is True:
                     display_manager.print_player_selection()
                     self.receive_input()
-                    if (str.isalpha(self.user_input)):
+                    if str.isalpha(self.user_input):
                         valid_input = False
                         break
                     amount_of_players = int(self.user_input)
                     if self.user_input == '1':
                         valid_input = False
                         break
+                    #Note: PYLINT says an if is not necessary, it has to be an elif.
+                    #It MUST actually be an if
                     if int(self.user_input) <= 1 or int(self.user_input) > 4:
                         valid_input = False
                         break
-                    else:
-                        pass
+
                     print("How many computers?")
                     self.receive_input()
                     amount_of_computers = int(self.user_input)
@@ -165,7 +173,7 @@ class GameManager():
                     if human_players <= 0:
                         valid_input = False
                         break
-                    #pdb.set_trace()
+
                     if int(amount_of_computers) + int(human_players) > 4:
                     #or int(amount_of_computers) + int(human_players) < 0):
                         print("Invalid amount of players.")
